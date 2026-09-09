@@ -4,8 +4,11 @@ Projeto acadêmico da disciplina **Disruptive Architectures: IoT, IoB & Generati
 
 ## Integrantes
 
-- **Altamir Lima** — RM 563906
+- **Olavo Porto Neves** — RM 563558
+- **Altamir Lima** — RM 562906
 - **Felipe Conte** — RM 562248
+- **Luiz Gustavo** — RM 564495
+- **Pedro Henrique Dias França** — RM 561940
 
 ## 1. Proposta
 
@@ -136,7 +139,3 @@ CLYVO_VET_SPRINT3_FINAL_COMPLETO/
 ## 12. Resultado parcial
 
 O protótipo permite demonstrar o ciclo completo da proposta: cadastro/contexto do pet, execução do motor, identificação de protocolos, explicação da decisão, criação de obrigações e acompanhamento da jornada.
-
-## Escopo acadêmico
-
-Esta versão atende à proposta do **3º Sprint de Disruptive Architectures**. Os requisitos de Spring Boot, Flyway e Spring Security pertencem ao material de **Java Advanced** e não fazem parte desta entrega de Disruptive.
