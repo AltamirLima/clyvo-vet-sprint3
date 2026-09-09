@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CLYVO VET | Inteligência Veterinária</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-icon"><img src="assets/logo.svg" alt="CLYVO VET"></div><div><strong>CLYVO</strong><span>VET</span></div></div>
+  <div class="brand-sub">CUIDADO INTELIGENTE</div>
+  <nav>
+    <button class="nav active" data-view="dashboard"><i>▦</i><span>Dashboard</span></button>
+    <button class="nav" data-view="pets"><i>🐾</i><span>Pets cadastrados</span><b id="petCountNav">4</b></button>
+    <button class="nav" data-view="ia"><i>✦</i><span>Demonstração IA</span></button>
+    <button class="nav" data-view="protocols"><i>☷</i><span>Protocolos</span></button>
+    <button class="nav" data-view="architecture"><i>◇</i><span>Arquitetura</span></button>
+    <button class="nav" data-view="data"><i>◫</i><span>Dados & IA</span></button>
+    <button class="nav" data-view="journey"><i>◎</i><span>Jornada</span></button>
+  </nav>
+  <div class="side-status"><span class="pulse"></span><div><b>Sistema operacional</b><small>Motor de regras ativo</small></div></div>
+</aside>
+
+<main>
+<header class="top">
+ <div><div class="crumb">CLYVO VET / SPRINT 3</div><h1 id="pageTitle">Visão geral</h1><p id="pageSub">Controle inteligente da jornada de cuidado.</p></div>
+ <div class="top-actions"><div class="date-chip">◷ <span id="today"></span></div><button class="outline" onclick="go('pets')">🐾 Ver todos os pets</button></div>
+</header>
+
+<section id="dashboard" class="view show">
+ <div class="welcome">
+   <div><span class="eyebrow">PLATAFORMA DE CUIDADO INTELIGENTE</span><h2>Mais organização.<br><em>Melhores cuidados.</em></h2><p>A CLYVO acompanha pets, identifica próximas ações e organiza toda a jornada de cuidado.</p><div class="hero-actions"><button class="primary" onclick="go('ia')">Testar a IA →</button><button class="ghost" onclick="go('pets')">Ver pets</button></div></div>
+   <div class="hero-orbit"><div class="orbit o1"></div><div class="pet-core"><img src="assets/logo.svg" alt="Logo CLYVO"></div><div class="float-card f1"><span>✦</span><b>IA explicável</b><small>Decisões claras</small></div></div>
+ </div>
+ <div class="kpis">
+  <article><div class="kicon teal">🐾</div><div><small>PETS CADASTRADOS</small><strong id="kPets">4</strong><span>Base ativa</span></div></article>
+  <article><div class="kicon purple">✦</div><div><small>ANÁLISES REALIZADAS</small><strong id="kAnalyses">12</strong><span>Motor inteligente</span></div></article>
+  <article><div class="kicon orange">◷</div><div><small>PRÓXIMAS AÇÕES</small><strong id="kObligations">7</strong><span>Cuidados previstos</span></div></article>
+ </div>
+ <div class="dashboard-grid simplified"><section class="panel priorities"><div class="panel-title"><div><span class="label">ATENÇÃO NECESSÁRIA</span><h3>Ações que precisam de acompanhamento</h3><p>Prioridades geradas pelas análises e jornadas em andamento.</p></div><button class="text-btn" onclick="go('journey')">Ver todas →</button></div><div id="attentionList" class="attention-list"></div></section></div>
+ <section class="panel pet-preview"><div class="panel-title"><div><span class="label">BASE DE PACIENTES</span><h3>Pets inscritos</h3><p>Selecione um pet para consultar seus dados completos.</p></div><button class="primary small" onclick="go('pets')">Gerenciar pets</button></div><div id="petPreview" class="pet-grid"></div></section>
+</section>
+
+<section id="pets" class="view">
+ <div class="section-head"><div><span class="eyebrow">BASE DE PACIENTES</span><h2>Pets cadastrados</h2><p>Consulte o perfil, histórico e recomendações de cada pet.</p></div><button class="primary" onclick="openPetForm()">＋ Novo pet</button></div>
+ <div class="pet-toolbar"><input id="petSearch" placeholder="🔎 Buscar por nome, espécie ou raça..." oninput="renderPets()"><select id="petFilter" onchange="renderPets()"><option value="">Todas as espécies</option><option>CANINO</option><option>FELINO</option></select></div>
+ <div id="petList" class="pet-list"></div>
+ <section class="panel pet-analysis-panel"><div class="panel-title"><div><span class="label">MEMÓRIA DA IA</span><h3>Análises salvas por pet</h3><p>Selecione um paciente para consultar todas as demonstrações de IA já realizadas.</p></div></div><select id="petAnalysisSelect" onchange="renderPetAnalysisHistory()"></select><div id="petAnalysisHistory" class="analysis-history"></div></section>
+</section>
+
+<section id="ia" class="view">
+ <div class="section-head"><div><span class="eyebrow">MOTOR INTELIGENTE</span><h2>Demonstração da IA</h2><p>Analise perfis, gere obrigações e compare cenários.</p></div><div class="ia-status"><span class="pulse"></span> Motor online</div></div>
+ <div class="ia-layout">
+  <section class="panel form-panel"><div class="step-title"><span>01</span><div><b>Contexto do pet</b><small>Informações utilizadas na decisão</small></div></div>
+   <form id="iaForm"><div class="form-grid">
+      <label>Nome<input id="iaNome" value="Thor"></label>
+      <label>Espécie<select id="iaEspecie"><option value="CANINO">Canino</option><option value="FELINO">Felino</option></select></label>
+      <label>Raça<input id="iaRaca" value="Labrador"></label>
+      <label>Porte<select id="iaPorte"><option>PEQUENO</option><option>MEDIO</option><option selected>GRANDE</option></select></label>
+      <label>Idade<input id="iaIdade" type="number" value="8" min="0"></label>
+      <label>Evento<select id="iaEvento"><option value="ROTINA">Consulta de rotina / Check-up preventivo</option><option value="VACINA">💉 Vacinação</option><option value="VERMIFUGO">🪱 Vermifugação</option><option value="ODONTO">🦷 Avaliação odontológica</option><option value="CRONICA">🩺 Acompanhamento de condição crônica</option><option value="PESO">⚖️ Avaliação / controle de peso</option><option value="DERMATO">🧴 Atendimento dermatológico</option><option value="POS_ATENDIMENTO">🏥 Pós-atendimento / procedimento</option><option value="GERIATRICO">👴 Check-up geriátrico</option><option value="FELINO">🐱 Check-up felino</option></select></label>
+    </div><div class="context-box"><b>Contexto adicional</b><label class="check"><input type="checkbox" id="iaDental"> Necessidade odontológica registrada</label><label class="check"><input type="checkbox" id="iaCronica"> Condição crônica registrada</label></div><button class="primary full">✦ Executar análise inteligente</button></form>
+   <div class="quick-scenarios"><b>Cenários rápidos</b><div><button onclick="loadScenario('senior')">🐶 Cão sênior</button><button onclick="loadScenario('cat')">🐱 Gato rotina</button><button onclick="loadScenario('chronic')">🩺 Condição crônica</button></div></div>
+  </section>
+  <section class="panel result-panel"><div class="step-title"><span>02</span><div><b>Decisão explicável</b><small>Entenda exatamente por que cada regra foi aplicada</small></div></div><div id="iaResult" class="ia-empty"><div>✦</div><h3>Aguardando análise</h3><p>Execute o motor para gerar recomendações personalizadas.</p></div></section>
+ </div>
+ <section class="ia-insights"><article><span>01</span><b>Coleta o contexto</b><p>Considera idade, espécie, porte, evento e condições adicionais.</p></article><article><span>02</span><b>Compara protocolos</b><p>O motor verifica quais critérios cadastrados foram atendidos.</p></article><article><span>03</span><b>Gera a recomendação</b><p>Cria uma ação com prazo, prioridade e justificativa.</p></article></section>
+ <section class="panel ia-method"><span class="label">COMO A DECISÃO É EXPLICADA</span><h3>Entrada → critérios encontrados → protocolo → ação na jornada</h3><p>A abordagem adotada é um motor de regras inteligentes para recomendação e priorização. Cada análise fica vinculada ao pet, registra os dados avaliados, os protocolos encontrados e pode iniciar uma ação de cuidado contínuo.</p></section>
+</section>
+
+<section id="protocols" class="view">
+ <div class="section-head"><div><span class="eyebrow">BASE DE CONHECIMENTO</span><h2>Protocolos inteligentes</h2><p>Regras organizadas que transformam critérios em obrigações futuras.</p></div><div class="protocol-stats"><span><b id="protocolCount">10</b> ativos</span><span><b>100%</b> explicáveis</span></div></div>
+ <div class="protocol-filter"><button class="filter active-filter" onclick="filterProtocols('all',this)">Todos</button><button class="filter" onclick="filterProtocols('alta',this)">Alta prioridade</button><button class="filter" onclick="filterProtocols('preventivo',this)">Preventivos</button><button class="filter" onclick="filterProtocols('acompanhamento',this)">Acompanhamento</button></div><div id="protocolList" class="protocol-list"></div>
+ <div class="protocol-explain panel"><div class="explain-icon">✦</div><div><span class="label">COMO O MOTOR DECIDE</span><h3>SE → critérios atendidos → ENTÃO → obrigação futura</h3><p>O motor compara os dados do pet com protocolos parametrizados. Quando os critérios são atendidos, cria uma recomendação com prioridade, prazo e justificativa.</p></div></div>
+ <div class="guard">🛡️ <div><b>Guardrail clínico</b><p>A plataforma não realiza diagnóstico, prescrição ou opinião clínica. A decisão médica permanece com o profissional veterinário.</p></div></div>
+</section>
+
+<section id="architecture" class="view">
+ <div class="section-head"><div><span class="eyebrow">VISÃO TÉCNICA</span><h2>Arquitetura da solução</h2><p>Explore como os componentes trocam dados e produzem a decisão.</p></div></div>
+ <div class="architecture-tabs"><button class="arch-tab active-arch" onclick="setArch('flow',this)">Fluxo principal</button><button class="arch-tab" onclick="setArch('layers',this)">Camadas</button><button class="arch-tab" onclick="setArch('integration',this)">Integração</button></div><div id="architectureContent" class="panel architecture-content"></div>
+ <div class="architecture-details"><article><span>📱</span><b>Aplicação</b><p>Interface para acompanhar pets e jornadas.</p></article><article><span>⚙️</span><b>API & Dados</b><p>Regras de negócio e armazenamento das informações.</p></article><article><span>✦</span><b>Motor IA</b><p>Analisa critérios e gera recomendações explicáveis.</p></article></div>
+</section>
+
+<section id="data" class="view">
+ <div class="section-head"><div><span class="eyebrow">DATA INTELLIGENCE</span><h2>Dados que alimentam a IA</h2><p>Veja quais informações entram no motor e como influenciam a decisão.</p></div><div class="data-score"><b>9</b><span>categorias<br>mapeadas</span></div></div>
+ <div class="data-dashboard"><section class="panel data-source"><div class="panel-title"><div><span class="label">ORIGEM</span><h3>Mapa de dados</h3></div></div><div class="source-bars"><div><span>Cadastro do pet</span><b style="width:90%"></b><em>4 campos</em></div><div><span>Histórico clínico</span><b style="width:76%"></b><em>3 campos</em></div><div><span>Eventos</span><b style="width:58%"></b><em>2 campos</em></div><div><span>Interações</span><b style="width:42%"></b><em>1 campo</em></div></div></section><section class="panel data-use"><span class="label">PROCESSAMENTO</span><h3>Do dado à decisão</h3><div class="data-pipeline"><span>Entrada</span><b>→</b><span>Validação</span><b>→</b><span>Regra</span><b>→</b><span>Prioridade</span><b>→</b><span>Obrigação</span></div></section></div>
+ <div class="data-toolbar"><input id="dataSearch" placeholder="🔎 Buscar dado..." oninput="renderDataTable()"><select id="dataUseFilter" onchange="renderDataTable()"><option value="">Todos os usos</option><option value="Personalização">Personalização</option><option value="Priorização">Priorização</option><option value="Contexto">Contexto</option></select></div><div class="panel table-wrap"><table><thead><tr><th>Dado</th><th>Origem</th><th>Estrutura</th><th>Uso pela IA</th><th>Função</th></tr></thead><tbody id="dataTable"></tbody></table></div>
+</section>
+
+<section id="journey" class="view">
+ <div class="section-head"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Jornada da obrigação</h2><p>Simule o caminho completo até o cuidado ser concluído.</p></div><button class="outline" onclick="resetJourney()">↺ Reiniciar jornada</button></div>
+ <div class="panel journey-main"><div class="journey-progress"><div id="progressFill"></div></div><div id="journeySteps" class="journey-steps"></div><div class="journey-detail"><div id="journeyIcon" class="journey-icon">📅</div><div><span class="label" id="journeyStageLabel">ETAPA 1 DE 5</span><h3 id="journeyTitle">Obrigação prevista</h3><p id="journeyText">O Motor Inteligente identificou um protocolo aplicável e criou uma obrigação futura.</p></div></div><div class="journey-actions"><button id="prevJourney" class="ghost" onclick="previousJourney()">← Voltar</button><button id="nextJourney" class="primary" onclick="nextJourney()">Avançar etapa →</button></div></div>
+ <div class="journey-events panel"><div class="panel-title"><div><span class="label">EVENTOS REGISTRADOS</span><h3>Histórico da simulação</h3></div><button class="text-btn" onclick="clearEvents()">Limpar</button></div><div id="eventLog" class="event-log"></div></div>
+ <div class="attribution"><div><span class="label">RESULTADO</span><h3>Da recomendação ao cuidado</h3><p>O sistema acompanha a obrigação até a conclusão do atendimento.</p><strong>Obrigação → Notificação → Agendamento → Atendimento</strong></div></div>
+</section>
+</main></div>
+<div id="modal" class="modal hidden"><div class="modal-box"><button class="close" onclick="closeModal()">×</button><div id="modalContent"></div></div></div>
+<script src="assets/app.js"></script>
+</body></html>
