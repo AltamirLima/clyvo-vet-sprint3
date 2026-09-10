@@ -134,7 +134,7 @@ CLYVO_VET_SPRINT3_FINAL_COMPLETO/
 
 **GitHub:** https://github.com/AltamirLima/clyvo-vet-sprint3
 
-**Vídeo YouTube não listado:** preencher após a gravação e publicação.
+**Vídeo YouTube não listado:** https://youtu.be/cG4Wnk9SvGU
 
 ## 12. Resultado parcial
 
