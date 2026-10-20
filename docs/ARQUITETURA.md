@@ -1,42 +1,28 @@
-# Arquitetura — CLYVO VET Sprint 3
-
-## Diagrama arquitetural
+# Arquitetura — CLYVO VET Sprint 4
 
 ```mermaid
-flowchart LR
-    U[👤 Tutor / Clínica] --> APP[📱 Aplicação CLYVO VET]
-    APP --> API[⚙️ API / Camada de aplicação]
-    API <--> DB[(🗄️ Banco de dados)]
-    API --> AI[✦ Motor de regras inteligentes]
-    AI --> PROT[📚 Protocolos parametrizados]
-    PROT --> AI
-    AI --> API
-    API --> APP
-    APP --> J[🗓️ Jornada do cuidado]
+flowchart TD
+    T[👤 Tutor / Clínica] --> UI[🖥️ Interface CLYVO VET]
+    UI -->|Mensagem + contexto mínimo| BE[⚙️ Backend Node.js]
+    BE -->|Prompt / JSON| API[✦ API de IA generativa]
+    API -->|Intenção + categoria sugerida| BE
+    BE -->|Valida JSON e categoria| UI
+    UI --> RULES[🧠 Motor de regras determinístico]
+    RULES --> PROT[📚 Protocolos parametrizados]
+    PROT --> JOURNEY[🗓️ Jornada de cuidado]
+    UI <--> LS[(localStorage do navegador)]
 ```
 
-## Fluxo de dados
+## Responsabilidades
+- **Interface:** captura mensagem do tutor e exibe o resultado.
+- **Backend Node.js:** protege a chave, valida a entrada, chama a API e valida a saída.
+- **API de IA generativa:** interpreta linguagem natural e sugere uma categoria de acompanhamento.
+- **Motor de regras:** determina os protocolos existentes, prioridade e prazo; não delega essas decisões livres ao LLM.
+- **localStorage:** persiste pets, análises e jornadas no navegador. Não é um banco remoto.
+- **Clínica/veterinário:** permanece responsável por decisões clínicas.
 
-1. Tutor ou clínica registra/consulta informações.
-2. A aplicação coleta o contexto do pet e o evento de cuidado.
-3. A camada de aplicação valida e organiza as entradas.
-4. Os dados necessários são consultados no armazenamento.
-5. O motor inteligente compara os dados com os protocolos parametrizados.
-6. O motor devolve protocolos aplicáveis, prioridade, prazo e justificativa.
-7. A aplicação apresenta a recomendação.
-8. Ao salvar a análise, uma jornada é criada para acompanhar a execução.
+## Segurança
+A chave de API é lida pelo backend a partir do arquivo .env; não é enviada ao navegador. O servidor entrega publicamente apenas index.html e arquivos estáticos da pasta assets/, não o arquivo de segredos nem o código do servidor. O backend restringe tamanho da mensagem, categorias permitidas e formato esperado. Falhas da API retornam erro claro sem apresentar resultado fictício.
 
-## Componentes
-
-| Componente | Responsabilidade |
-|---|---|
-| Front-end | Interface, cadastro, filtros, demonstração e jornada |
-| API / aplicação | Orquestração do fluxo e regras de negócio |
-| Banco | Persistência de perfis, eventos, análises e jornadas |
-| Motor inteligente | Avaliação de critérios e recomendação |
-| Protocolos | Base de conhecimento parametrizada |
-| Jornada | Acompanhamento da obrigação até o cuidado concluído |
-
-## Implementação do protótipo
-
-O protótipo desta entrega roda no navegador com HTML, CSS e JavaScript. O `localStorage` representa a persistência local. A API e o banco aparecem na arquitetura como componentes da solução proposta, mas não são serviços remotos implementados nesta versão.
+## Limitações honestas
+A API externa é usada quando a aplicação está configurada com uma chave válida e um modelo habilitado. A persistência segue local. Não existe integração com prontuário clínico ou banco remoto nesta versão. A API configurada precisa ser compatível com o formato Chat Completions.
