@@ -46,8 +46,49 @@ function renderProtocols(filter='all'){let arr=protocols.filter(p=>filter==='all
 function filterProtocols(f,el){document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active-filter'));el.classList.add('active-filter');renderProtocols(f)}
 function usePetInIA(id){let p=pets.find(x=>x.id===id);if(!p)return;iaNome.value=p.name;iaEspecie.value=p.species;iaRaca.value=p.breed;iaPorte.value=p.size;iaIdade.value=p.age;iaEvento.value='ROTINA';iaNome.dataset.petId=id;go('ia')}
 function loadScenario(s){let d={senior:['Thor','CANINO','Labrador','GRANDE',9,'ROTINA'],cat:['Mia','FELINO','Siamês','PEQUENO',4,'ROTINA'],chronic:['Max','CANINO','SRD','MEDIO',6,'CRONICA']}[s];[iaNome.value,iaEspecie.value,iaRaca.value,iaPorte.value,iaIdade.value,iaEvento.value]=d;iaDental.checked=s==='chronic';iaCronica.checked=s==='chronic';iaNome.dataset.petId='';runIA()}
-function getRecs(age,esp,event,dental,chronic){let r=[];if(age>=7)r.push(protocols[0]);if(event==='VACINA')r.push(protocols[1]);if(event==='VERMIFUGO')r.push(protocols[2]);if(dental)r.push(protocols[3]);if(chronic||event==='CRONICA')r.push(protocols[4]);if(esp==='FELINO'&&event==='ROTINA')r.push(protocols[5]);if(event==='PESO')r.push(protocols[6]);if(event==='DERMATO')r.push(protocols[7]);if(event==='POS_ATENDIMENTO')r.push(protocols[8]);if(!r.length)r.push(protocols[9]);return [...new Map(r.map(x=>[x.id,x])).values()]}
-function runIA(){let n=iaNome.value||'Pet',age=+iaIdade.value,esp=iaEspecie.value,event=iaEvento.value,dental=iaDental.checked,chronic=iaCronica.checked,rec=getRecs(age,esp,event,dental,chronic),petId=Number(iaNome.dataset.petId)||null;let analysis={id:Date.now(),petId,name:n,date:new Date().toLocaleString('pt-BR'),inputs:{age,esp,event,dental,chronic,breed:iaRaca.value,size:iaPorte.value},recs:rec.map(r=>r.id),savedToJourney:false};analyses.push(analysis);saveAll();updateCounters();iaResult.innerHTML=`<div class="result-summary"><span class="eyebrow">ANÁLISE CONCLUÍDA E REGISTRADA</span><h3>✓ ${rec.length} protocolo(s) identificado(s)</h3><p><b>Decisão explicável:</b> o motor compara o contexto do pet com critérios parametrizados e recomenda cuidados complementares.</p><div class="decision-path"><span>Dados</span> → <span>Evento</span> → <span>Regras</span> → <span>Protocolos</span> → <span>Ação</span></div>${rec.map(r=>`<div class="recommendation"><div class="rec-head"><b>${r.icon} ${r.name}</b><span class="badge ${priorityClass(r.priority)}">${r.priority}</span></div><p><b>Critério:</b> ${r.when}</p><p><b>Por que:</b> ${r.why}</p><div class="rec-tags"><span>Prazo: ${r.days} dias</span><span>Explicável</span></div></div>`).join('')}${petId?`<div class="analysis-actions"><button class="primary full" onclick="saveAnalysisToJourney(${analysis.id})">Criar ações de cuidado na jornada →</button></div>`:'<div class="guard"><b>Demonstração registrada.</b><p>Para vincular ao histórico, selecione um pet cadastrado antes da análise.</p></div>'}</div>`}
+function getRecs(age,esp,event,dental,chronic){
+ let r=[];
+ if(age>=7||event==='GERIATRICO')r.push(protocols.find(p=>p.id==='senior'));
+ if(event==='VACINA')r.push(protocols.find(p=>p.id==='vaccine'));
+ if(event==='VERMIFUGO')r.push(protocols.find(p=>p.id==='deworm'));
+ if(dental||event==='ODONTO')r.push(protocols.find(p=>p.id==='dental'));
+ if(chronic||event==='CRONICA')r.push(protocols.find(p=>p.id==='chronic'));
+ if(esp==='FELINO'&&(event==='ROTINA'||event==='FELINO'))r.push(protocols.find(p=>p.id==='feline'));
+ if(event==='PESO')r.push(protocols.find(p=>p.id==='weight'));
+ if(event==='DERMATO')r.push(protocols.find(p=>p.id==='derm'));
+ if(event==='POS_ATENDIMENTO')r.push(protocols.find(p=>p.id==='post'));
+ if(!r.length)r.push(protocols.find(p=>p.id==='routine'));
+ return [...new Map(r.filter(Boolean).map(x=>[x.id,x])).values()];
+}
+function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+function runIA(aiContext=null){
+ let n=iaNome.value||'Pet',age=+iaIdade.value,esp=iaEspecie.value,event=iaEvento.value,dental=iaDental.checked,chronic=iaCronica.checked,rec=getRecs(age,esp,event,dental,chronic),petId=Number(iaNome.dataset.petId)||null;
+ let analysis={id:Date.now(),petId,name:n,date:new Date().toLocaleString('pt-BR'),inputs:{age,esp,event,dental,chronic,breed:iaRaca.value,size:iaPorte.value},recs:rec.map(r=>r.id),savedToJourney:false,aiContext:aiContext||null};
+ analyses.push(analysis);saveAll();updateCounters();
+ const aiCard=aiContext?'<div class="ai-generated-card"><span class="eyebrow">IA GENERATIVA • RESPOSTA DA API</span><h4>Interpretação da mensagem</h4><p><b>Intenção:</b> '+escapeHtml(aiContext.intentLabel||aiContext.intent||'Não classificada')+'</p><p>'+escapeHtml(aiContext.summary||'')+'</p><p><b>Resposta sugerida:</b> '+escapeHtml(aiContext.response||'')+'</p><small>Categoria sugerida: '+escapeHtml(aiContext.suggestedEvent||'ROTINA')+(aiContext.needsVet?' • Encaminhamento veterinário recomendado':'')+'</small></div>':'';
+ iaResult.innerHTML='<div class="result-summary">'+aiCard+'<span class="eyebrow">MOTOR DE REGRAS • ANÁLISE CONCLUÍDA</span><h3>✓ '+rec.length+' protocolo(s) identificado(s)</h3><p><b>Decisão explicável:</b> o motor compara o contexto do pet com critérios parametrizados. A IA generativa interpreta a mensagem; os protocolos e prazos são selecionados por regras verificáveis.</p><div class="decision-path"><span>Dados</span> → <span>Interpretação IA</span> → <span>Regras</span> → <span>Protocolos</span> → <span>Ação</span></div>'+rec.map(r=>'<div class="recommendation"><div class="rec-head"><b>'+r.icon+' '+escapeHtml(r.name)+'</b><span class="badge '+priorityClass(r.priority)+'">'+escapeHtml(r.priority)+'</span></div><p><b>Critério:</b> '+escapeHtml(r.when)+'</p><p><b>Por que:</b> '+escapeHtml(r.why)+'</p><div class="rec-tags"><span>Prazo: '+r.days+' dias</span><span>Explicável</span></div></div>').join('')+(petId?'<div class="analysis-actions"><button class="primary full" onclick="saveAnalysisToJourney('+analysis.id+')">Criar ações de cuidado na jornada →</button></div>':'<div class="guard"><b>Demonstração registrada.</b><p>Para vincular ao histórico, selecione um pet cadastrado antes da análise.</p></div>')+'</div>';
+}
+async function interpretWithAI(){
+ const message=(document.getElementById('tutorMessage')?.value||'').trim();
+ const status=document.getElementById('aiInterpretationStatus');
+ const btn=document.getElementById('interpretAiBtn');
+ if(!message){status.className='ai-interpretation-status error';status.textContent='Digite uma mensagem do tutor para a IA interpretar.';return;}
+ btn.disabled=true;btn.textContent='Interpretando com a API...';status.className='ai-interpretation-status';status.textContent='Enviando a mensagem ao serviço de IA seguro...';
+ try{
+  const response=await fetch('/api/ai/interpret',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message,pet:{name:iaNome.value||'Pet',species:iaEspecie.value,breed:iaRaca.value,age:Number(iaIdade.value)||0,size:iaPorte.value,event:iaEvento.value,dental:iaDental.checked,chronic:iaCronica.checked}})});
+  const data=await response.json().catch(()=>({error:'O servidor retornou uma resposta inválida.'}));
+  if(!response.ok)throw new Error(data.error||'Não foi possível concluir a interpretação da IA.');
+  const allowed=['ROTINA','VACINA','VERMIFUGO','ODONTO','CRONICA','PESO','DERMATO','POS_ATENDIMENTO','GERIATRICO','FELINO'];
+  const suggested=allowed.includes(data.suggestedEvent)?data.suggestedEvent:'ROTINA';
+  iaEvento.value=suggested;
+  status.className='ai-interpretation-status success';
+  status.textContent='Interpretação recebida da API. Categoria identificada: '+suggested+'. O motor de regras será executado para validar protocolos.';
+  runIA({...data,suggestedEvent:suggested});
+ }catch(error){
+  status.className='ai-interpretation-status error';
+  status.textContent=error.message+' Confira se o servidor está iniciado e se a chave da API está configurada no arquivo .env. Nenhuma resposta simulada foi apresentada.';
+ }finally{btn.disabled=false;btn.textContent='✦ Interpretar mensagem com IA generativa';}
+}
 function saveAnalysisToJourney(id){let a=analyses.find(x=>x.id===id);if(!a||!a.petId)return;if(a.savedToJourney){go('journey');return;}a.recs.forEach((pid,i)=>{let p=protocols.find(x=>x.id===pid);journeys.push({id:Date.now()+i,analysisId:id,petId:a.petId,protocolId:pid,status:'PREVISTA',createdAt:new Date().toLocaleString('pt-BR'),dueDays:p.days,events:[{status:'PREVISTA',time:new Date().toLocaleString('pt-BR'),msg:`IA recomendou ${p.name} e criou a obrigação de cuidado.`}]})});a.savedToJourney=true;saveAll();refreshUI();go('journey')}
 function renderJourney(){journeySteps.innerHTML=journey.map((s,i)=>`<div class="journey-step ${i===currentJourney?'active':i<currentJourney?'done':''}"><div class="step-circle">${i<currentJourney?'✓':i+1}</div><b>${['PREVISTA','NOTIFICADA','RESPONDIDA','AGENDADA','CUMPRIDA'][i]}</b><small>${i===0?'Criada':i===1?'Enviada':i===2?'Interação':i===3?'Marcada':'Finalizada'}</small></div>`).join('');progressFill.style.width=(currentJourney/4*100)+'%';let s=journey[currentJourney];journeyIcon.textContent=s.icon;journeyStageLabel.textContent=s.label;journeyTitle.textContent=s.title;journeyText.textContent=s.text;prevJourney.disabled=currentJourney===0;nextJourney.disabled=currentJourney===4;nextJourney.textContent=currentJourney===4?'✓ Jornada concluída':'Avançar etapa →';renderEvents()}
 function addEvent(msg){events.unshift({msg,time:new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})})}
