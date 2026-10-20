@@ -1,7 +1,7 @@
 # Sprint 4 — Implementação da IA do CLYVO VET
 
 ## O que foi implementado
-- Endpoint de backend `POST /api/ai/interpret` que chama uma API compatível com Chat Completions.
+- Endpoint de backend `POST /api/ai/interpret` que chama uma API Google Gemini (generateContent).
 - Interface para o tutor escrever uma mensagem em linguagem natural.
 - Classificação de intenção e sugestão de categoria de acompanhamento pela IA generativa.
 - Integração do resultado com o motor de regras determinístico já existente.
@@ -31,8 +31,8 @@ Requisito: Node.js 18 ou superior.
 
 1. Instale Node.js 18+.
 2. Na pasta raiz do projeto, copie `.env.example` para `.env`.
-3. Preencha `OPENAI_API_KEY` com sua chave. Nunca commite o arquivo `.env`.
-4. Se seu provedor for compatível com a API OpenAI, configure `OPENAI_BASE_URL` e `OPENAI_MODEL` conforme a documentação do provedor. O padrão é OpenAI.
+3. Preencha `GEMINI_API_KEY` com sua chave. Nunca commite o arquivo `.env`.
+4. A integração está configurada para a API Google Gemini. Crie uma chave no Google AI Studio e configure `GEMINI_API_KEY`; o padrão usa `GEMINI_MODEL=gemini-2.5-flash`.
 5. Execute `npm start`.
 6. Abra `http://localhost:3000`.
 7. Entre em Demonstração IA, selecione ou cadastre um pet, digite uma mensagem e clique em **Interpretar mensagem com IA generativa**.
@@ -51,3 +51,7 @@ Requisito: Node.js 18 ou superior.
 - Não envie dados pessoais ou clínicos desnecessários. Use dados fictícios na demonstração acadêmica.
 - O protótipo não substitui avaliação veterinária, não realiza diagnóstico e não prescreve.
 - A aplicação ainda usa `localStorage`; não há API clínica nem banco remoto para consultar histórico real.
+
+
+## Provedor configurado
+O backend chama `POST /models/{model}:generateContent` da API Gemini, envia a chave no cabeçalho `x-goog-api-key` e solicita resposta JSON com `generationConfig.responseMimeType`. A resposta é lida de `candidates[0].content.parts`. Referência oficial: https://ai.google.dev/api/generate-content.
