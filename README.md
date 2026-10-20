@@ -11,9 +11,9 @@ Projeto acadêmico da disciplina **Disruptive Architectures: IoT, IoB & Generati
 
 ## 1. O que foi implementado nesta Sprint
 
-A aplicação agora inclui uma integração real com uma API de IA generativa por meio de um backend Node.js. O tutor pode escrever uma mensagem em linguagem natural; o modelo interpreta a intenção e sugere uma categoria de acompanhamento. A categoria é validada e encaminhada ao motor de regras existente, que continua selecionando os protocolos, prazos, prioridades e justificativas de forma determinística.
+A aplicação agora inclui uma integração real com uma API Google Gemini por meio de um backend Node.js. O tutor pode escrever uma mensagem em linguagem natural; o modelo interpreta a intenção e sugere uma categoria de acompanhamento. A categoria é validada e encaminhada ao motor de regras existente, que continua selecionando os protocolos, prazos, prioridades e justificativas de forma determinística.
 
-A funcionalidade depende de uma chave válida, um modelo habilitado e uma API compatível com o formato Chat Completions. Sem configuração válida, o sistema exibe um erro explícito; não apresenta uma resposta falsa como se a IA tivesse funcionado.
+A funcionalidade depende de uma chave válida, um modelo habilitado e uma API Google Gemini (`generateContent`). Sem configuração válida, o sistema exibe um erro explícito; não apresenta uma resposta falsa como se a IA tivesse funcionado.
 
 ## 2. Problema de negócio
 
@@ -53,8 +53,8 @@ Uma recomendação ou retorno pode ser identificado durante o cuidado, mas não 
 
 1. Instale Node.js 18 ou superior.
 2. Copie `.env.example` para um arquivo chamado `.env`.
-3. Abra `.env` e configure `OPENAI_API_KEY` com sua chave. **Nunca publique ou envie esse arquivo ao GitHub.**
-4. O padrão usa `OPENAI_BASE_URL=https://api.openai.com/v1` e `OPENAI_MODEL=gpt-4o-mini`. Se usar outro provedor, configure a URL-base e o modelo conforme a documentação dele; ele precisa ser compatível com Chat Completions e com resposta JSON.
+3. Abra `.env` e configure `GEMINI_API_KEY` com sua chave. **Nunca publique ou envie esse arquivo ao GitHub.**
+4. O padrão usa `GEMINI_BASE_URL=https://generativelanguage.googleapis.com/v1beta` e `GEMINI_MODEL=gemini-2.5-flash`. Crie sua chave no Google AI Studio e mantenha-a somente no arquivo local `.env`.
 5. No terminal, dentro da pasta do projeto, execute `npm start`.
 6. Abra `http://localhost:3000`.
 7. Entre em **Demonstração IA**, selecione ou cadastre um pet, escreva uma mensagem fictícia e clique em **Interpretar mensagem com IA generativa**.
@@ -76,7 +76,7 @@ O backend e a chamada externa à API de IA estão implementados. Pets, análises
 - Não use dados reais sensíveis de clientes na apresentação. Prefira exemplos fictícios.
 - Respostas de IA podem conter erros e devem ser verificadas.
 - O sistema não diagnostica, não prescreve e não substitui o médico-veterinário.
-- A integração foi desenvolvida para provedores compatíveis com Chat Completions. Um provedor com formato diferente exige adaptação.
+- A integração usa o endpoint Gemini `generateContent` e a resposta estruturada em JSON.
 
 ## 9. Estrutura do projeto
 
