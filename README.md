@@ -3,128 +3,91 @@
 Projeto acadêmico da disciplina **Disruptive Architectures: IoT, IoB & Generative IA**.
 
 ## Integrantes
-
 - **Olavo Porto Neves** — RM 563558
 - **Altamir Lima** — RM 562906
 - **Felipe Conte** — RM 562248
 - **Luiz Gustavo** — RM 564495
 - **Pedro Henrique Dias França** — RM 561940
 
-## Sprint 4 — IA generativa integrada
+## 1. O que foi implementado nesta Sprint
 
-Esta versão acrescenta uma integração real via backend Node.js com uma API compatível com Chat Completions. O tutor pode escrever uma mensagem em linguagem natural; a IA interpreta a intenção e sugere uma categoria de acompanhamento. O motor de regras local continua determinando os protocolos, prazos e prioridades.
+A aplicação agora inclui uma integração real com uma API de IA generativa por meio de um backend Node.js. O tutor pode escrever uma mensagem em linguagem natural; o modelo interpreta a intenção e sugere uma categoria de acompanhamento. A categoria é validada e encaminhada ao motor de regras existente, que continua selecionando os protocolos, prazos, prioridades e justificativas de forma determinística.
 
-**Importante:** a funcionalidade de IA exige uma chave válida no arquivo local `.env`. A chave não deve ser publicada no GitHub. API e banco remoto não são alegados como implementados: a persistência da aplicação continua em `localStorage`.
-
-### Executar com IA
-
-1. Instale Node.js 18 ou superior.
-2. Copie `.env.example` para `.env` e configure `OPENAI_API_KEY`.
-3. Opcionalmente ajuste `OPENAI_BASE_URL` e `OPENAI_MODEL` para um provedor compatível.
-4. Execute `npm start` e abra `http://localhost:3000`.
-5. Na seção Demonstração IA, escreva uma mensagem e selecione **Interpretar mensagem com IA generativa**.
-6. Execute `npm test` para os testes automatizados básicos.
-
-Consulte [`docs/SPRINT4_IMPLEMENTACAO_IA.md`](docs/SPRINT4_IMPLEMENTACAO_IA.md) para arquitetura, validação, testes e limitações.
-
-## 1. Proposta
-
-O CLYVO VET acompanha a jornada contínua de cuidado veterinário. O Motor Inteligente utiliza regras parametrizadas para identificar protocolos aplicáveis ao contexto de cada pet, priorizar ações e transformar recomendações em obrigações futuras acompanháveis.
-
-O objetivo é aproximar a recomendação da execução: **dados → decisão explicável → ação → jornada de cuidado**.
-
-> **Guardrail clínico:** o protótipo não realiza diagnóstico, prescrição ou opinião clínica. Questões clínicas devem ser direcionadas ao profissional veterinário.
+A funcionalidade depende de uma chave válida, um modelo habilitado e uma API compatível com o formato Chat Completions. Sem configuração válida, o sistema exibe um erro explícito; não apresenta uma resposta falsa como se a IA tivesse funcionado.
 
 ## 2. Problema de negócio
 
-Uma recomendação ou retorno pode ser identificado durante o cuidado, mas não necessariamente se transforma em uma ação concluída pelo tutor e pela clínica. Isso dificulta a continuidade do acompanhamento.
+Uma recomendação ou retorno pode ser identificado durante o cuidado, mas não necessariamente se transforma em uma ação acompanhada pelo tutor e pela clínica. O CLYVO VET busca reduzir essa lacuna, transformando o contexto do pet em protocolos explicáveis e ações que podem ser acompanhadas na jornada.
 
-O componente inteligente reduz essa lacuna ao transformar critérios do pet e eventos de cuidado em uma recomendação com **protocolo, prioridade, prazo e justificativa**, que pode iniciar uma jornada individual.
+## 3. Fluxo da IA
 
-## 3. Abordagem de IA
+1. O tutor escreve uma mensagem na seção **Demonstração IA**.
+2. A interface envia a mensagem e o contexto mínimo do pet ao backend Node.js.
+3. O backend chama a API de IA generativa usando a chave armazenada no arquivo local `.env`.
+4. A resposta estruturada é validada; somente categorias permitidas são aceitas.
+5. A categoria sugerida é encaminhada ao motor de regras.
+6. O motor apresenta os protocolos aplicáveis com prazo, prioridade e justificativa.
+7. Para um pet cadastrado, o usuário pode criar ações na Jornada do Cuidado.
 
-A solução utiliza um **motor de regras inteligentes / sistema baseado em regras parametrizadas**.
+**Separação de responsabilidades:** o LLM interpreta a linguagem natural; o motor determinístico decide quais protocolos cadastrados correspondem à categoria. A IA não inventa datas, protocolos ou prazos.
 
-A abordagem foi escolhida por oferecer:
+## 4. Funcionalidades do protótipo
 
-- explicabilidade e rastreabilidade;
-- decisões previsíveis dentro dos critérios cadastrados;
-- priorização por nível e prazo;
-- possibilidade de parametrizar novos protocolos;
-- limite claro de atuação, sem substituir a avaliação veterinária.
+- Dashboard e cadastro/consulta de pets.
+- Demonstração do motor de regras e interpretação de mensagem via IA generativa.
+- 10 protocolos parametrizados, com gatilhos corrigidos para odontologia, geriatria e check-up felino.
+- Prioridade, prazo e justificativa por protocolo.
+- Criação e acompanhamento de jornadas.
+- Tratamento de erros da API, de configuração e de respostas inválidas.
+- Guardrail clínico: a solução não diagnostica, não prescreve e encaminha questões clínicas ao veterinário.
 
-A documentação completa está em [`docs/DOCUMENTACAO_IA.md`](docs/DOCUMENTACAO_IA.md).
+## 5. Tecnologias
 
-## 4. Funcionalidades
+- HTML5, CSS3 e JavaScript.
+- Node.js 18+ (backend sem dependências externas de pacote).
+- API de IA compatível com Chat Completions.
+- `localStorage` para persistência local das demonstrações.
+- Mermaid para o diagrama arquitetural.
 
-- Dashboard com indicadores e itens que precisam de atenção;
-- cadastro, consulta, busca e filtros de pets;
-- visualização do perfil e histórico de análises/jornadas;
-- demonstração interativa do Motor Inteligente;
-- cenários rápidos de análise;
-- 10 protocolos parametrizados e explicáveis;
-- prioridade e prazo por protocolo;
-- criação de jornadas a partir das recomendações;
-- arquitetura com fluxo entre aplicação, API, banco e IA;
-- catálogo de dados, origem, estrutura e uso;
-- jornada em 5 etapas: **Prevista → Notificada → Respondida → Agendada → Cumprida**;
-- persistência local das demonstrações por `localStorage`.
-
-## 5. Dados utilizados
-
-O modelo considera perfil do pet, histórico clínico, vacinas, consultas, medicamentos, comportamento/interações e eventos registrados. No protótipo, parte desse contexto é representada por campos estruturados e eventos simulados.
-
-Consulte [`docs/DADOS_E_IA.md`](docs/DADOS_E_IA.md) para o catálogo completo.
-
-## 6. Arquitetura
-
-```text
-Tutor / Clínica
-      ↓
-Aplicação CLYVO VET
-      ↓
-API / Camada de aplicação
-      ↕
-Banco de dados
-      ↓
-Motor de regras inteligentes
-      ↓
-Protocolos parametrizados
-      ↓
-Recomendação → Jornada de cuidado
-```
-
-O diagrama detalhado está em [`docs/ARQUITETURA.md`](docs/ARQUITETURA.md).
-
-### Observação sobre o protótipo
-
-Esta entrega é uma **demonstração funcional/simulada** do componente de IA. O front-end roda diretamente no navegador e usa `localStorage` como persistência local. API e banco aparecem na arquitetura como componentes da solução proposta, mas não são serviços remotos implementados nesta versão.
-
-## 7. Tecnologias
-
-- HTML5
-- CSS3
-- JavaScript
-- LocalStorage
-- SVG
-- Mermaid (diagrama arquitetural na documentação)
-
-## 8. Como executar
+## 6. Como executar
 
 1. Instale Node.js 18 ou superior.
-2. Copie `.env.example` para `.env` e preencha `OPENAI_API_KEY` com sua chave (não compartilhe nem publique esse arquivo).
-3. Execute `npm start` na pasta raiz.
-4. Abra `http://localhost:3000`.
-5. Na seção Demonstração IA, escreva uma mensagem e clique em **Interpretar mensagem com IA generativa**.
-6. Para testar: execute `npm test`.
+2. Copie `.env.example` para um arquivo chamado `.env`.
+3. Abra `.env` e configure `OPENAI_API_KEY` com sua chave. **Nunca publique ou envie esse arquivo ao GitHub.**
+4. O padrão usa `OPENAI_BASE_URL=https://api.openai.com/v1` e `OPENAI_MODEL=gpt-4o-mini`. Se usar outro provedor, configure a URL-base e o modelo conforme a documentação dele; ele precisa ser compatível com Chat Completions e com resposta JSON.
+5. No terminal, dentro da pasta do projeto, execute `npm start`.
+6. Abra `http://localhost:3000`.
+7. Entre em **Demonstração IA**, selecione ou cadastre um pet, escreva uma mensagem fictícia e clique em **Interpretar mensagem com IA generativa**.
+8. Confira a intenção e a categoria sugerida; revise os protocolos e, se o pet estiver cadastrado, crie a ação na jornada.
+9. Execute `npm test` para os testes automatizados básicos.
 
-A integração de IA requer chave válida, conexão com a internet e um modelo habilitado. Abrir `index.html` diretamente não ativa o endpoint de IA.
+Abrir o arquivo `index.html` diretamente não ativa o backend nem a API. A demonstração real exige conexão com a internet e uma chave/modelo válidos.
 
-## 9. Estrutura
+## 7. Arquitetura e persistência
+
+Consulte [`docs/ARQUITETURA.md`](docs/ARQUITETURA.md) e [`docs/SPRINT4_IMPLEMENTACAO_IA.md`](docs/SPRINT4_IMPLEMENTACAO_IA.md).
+
+O backend e a chamada externa à API de IA estão implementados. Pets, análises e jornadas continuam armazenados no `localStorage` do navegador. **Não existe banco de dados remoto nem integração com prontuário clínico real nesta versão**; não apresentamos esses componentes como implementados.
+
+## 8. Segurança e limitações
+
+- A chave fica no backend, no arquivo local `.env`; o servidor publica apenas `index.html` e os arquivos de `assets/`.
+- O backend limita o tamanho da mensagem e valida categorias permitidas.
+- Não use dados reais sensíveis de clientes na apresentação. Prefira exemplos fictícios.
+- Respostas de IA podem conter erros e devem ser verificadas.
+- O sistema não diagnostica, não prescreve e não substitui o médico-veterinário.
+- A integração foi desenvolvida para provedores compatíveis com Chat Completions. Um provedor com formato diferente exige adaptação.
+
+## 9. Estrutura do projeto
 
 ```text
-CLYVO_VET_SPRINT3_FINAL_COMPLETO/
-├── server.js\n├── package.json\n├── .env.example\n├── index.html
+CLYVO_VET_SPRINT4/
+├── index.html
+├── server.js
+├── package.json
+├── .env.example
+├── .gitignore
+├── LINKS.txt
 ├── assets/
 │   ├── app.js
 │   ├── logo.svg
@@ -135,35 +98,15 @@ CLYVO_VET_SPRINT3_FINAL_COMPLETO/
 │   ├── DADOS_E_IA.md
 │   ├── DOCUMENTACAO_IA.md
 │   ├── ROTEIRO_PITCH.md
+│   ├── ROTEIRO_PITCH_SPRINT4.md
 │   └── SPRINT4_IMPLEMENTACAO_IA.md
-├── .gitignore
-├── LINKS.txt
-└── README.md
+└── test/
+    └── sprint4.test.js
 ```
 
-## 10. Documentação da entrega
+## 10. Entrega
 
-- [`docs/DOCUMENTACAO_IA.md`](docs/DOCUMENTACAO_IA.md) — problema, abordagem, dados, personalização, decisão e guardrail.
-- [`docs/ARQUITETURA.md`](docs/ARQUITETURA.md) — diagrama e fluxo de integração.
-- [`docs/DADOS_E_IA.md`](docs/DADOS_E_IA.md) — catálogo de dados e estratégia de uso.
-- [`docs/ROTEIRO_PITCH.md`](docs/ROTEIRO_PITCH.md) — roteiro para o vídeo de aproximadamente 5 minutos.
-- [`docs/CHECKLIST_ENTREGA.md`](docs/CHECKLIST_ENTREGA.md) — conferência dos requisitos do Sprint 3.
+- **GitHub:** https://github.com/AltamirLima/clyvo-vet-sprint3
+- **Vídeo Sprint 4:** ainda precisa ser gravado com a IA real configurada, publicado no YouTube como **Não listado**, e inserido no `LINKS.txt` e neste README.
 
-## 11. Links para entrega
-
-**GitHub:** https://github.com/AltamirLima/clyvo-vet-sprint3
-
-**Vídeo YouTube não listado:** https://youtu.be/x3F-UoLda70
-
-## 12. Resultado parcial
-
-O protótipo permite demonstrar o ciclo completo da proposta: cadastro/contexto do pet, execução do motor, identificação de protocolos, explicação da decisão, criação de obrigações e acompanhamento da jornada.
-
-
-## Escopo Sprint 4
-
-- Integração de IA generativa via backend configurável.
-- Interpretação de mensagem do tutor com saída estruturada.
-- Motor de regras preservado para protocolos e prazos explicáveis.
-- Guardrails clínicos, tratamento de erros e testes automatizados básicos.
-- A API só funcionará após configurar uma chave válida no `.env`.
+Antes de entregar, configure a chave no ambiente de demonstração, execute os testes, teste cenários de sucesso e falha, grave o vídeo e valide a integridade do ZIP.
