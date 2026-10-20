@@ -1,4 +1,4 @@
-# CLYVO VET — Sprint 3
+# CLYVO VET — Sprint 4
 
 Projeto acadêmico da disciplina **Disruptive Architectures: IoT, IoB & Generative IA**.
 
@@ -9,6 +9,23 @@ Projeto acadêmico da disciplina **Disruptive Architectures: IoT, IoB & Generati
 - **Felipe Conte** — RM 562248
 - **Luiz Gustavo** — RM 564495
 - **Pedro Henrique Dias França** — RM 561940
+
+## Sprint 4 — IA generativa integrada
+
+Esta versão acrescenta uma integração real via backend Node.js com uma API compatível com Chat Completions. O tutor pode escrever uma mensagem em linguagem natural; a IA interpreta a intenção e sugere uma categoria de acompanhamento. O motor de regras local continua determinando os protocolos, prazos e prioridades.
+
+**Importante:** a funcionalidade de IA exige uma chave válida no arquivo local `.env`. A chave não deve ser publicada no GitHub. API e banco remoto não são alegados como implementados: a persistência da aplicação continua em `localStorage`.
+
+### Executar com IA
+
+1. Instale Node.js 18 ou superior.
+2. Copie `.env.example` para `.env` e configure `OPENAI_API_KEY`.
+3. Opcionalmente ajuste `OPENAI_BASE_URL` e `OPENAI_MODEL` para um provedor compatível.
+4. Execute `npm start` e abra `http://localhost:3000`.
+5. Na seção Demonstração IA, escreva uma mensagem e selecione **Interpretar mensagem com IA generativa**.
+6. Execute `npm test` para os testes automatizados básicos.
+
+Consulte [`docs/SPRINT4_IMPLEMENTACAO_IA.md`](docs/SPRINT4_IMPLEMENTACAO_IA.md) para arquitetura, validação, testes e limitações.
 
 ## 1. Proposta
 
@@ -106,7 +123,7 @@ Não são necessárias dependências ou instalação de servidor para a demonstr
 
 ```text
 CLYVO_VET_SPRINT3_FINAL_COMPLETO/
-├── index.html
+├── server.js\n├── package.json\n├── .env.example\n├── index.html
 ├── assets/
 │   ├── app.js
 │   ├── logo.svg
@@ -139,3 +156,12 @@ CLYVO_VET_SPRINT3_FINAL_COMPLETO/
 ## 12. Resultado parcial
 
 O protótipo permite demonstrar o ciclo completo da proposta: cadastro/contexto do pet, execução do motor, identificação de protocolos, explicação da decisão, criação de obrigações e acompanhamento da jornada.
+
+
+## Escopo Sprint 4
+
+- Integração de IA generativa via backend configurável.
+- Interpretação de mensagem do tutor com saída estruturada.
+- Motor de regras preservado para protocolos e prazos explicáveis.
+- Guardrails clínicos, tratamento de erros e testes automatizados básicos.
+- A API só funcionará após configurar uma chave válida no `.env`.
