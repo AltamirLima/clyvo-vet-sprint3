@@ -18,6 +18,6 @@ test('frontend chama backend e não contém chave de API hardcoded', () => {
 
 test('chave é carregada no backend e não no navegador', () => {
   const server = fs.readFileSync(path.join(__dirname, '..', 'server.js'), 'utf8');
-  assert.ok(server.includes('process.env.OPENAI_API_KEY'));
-  assert.ok(server.includes("'Authorization':'Bearer '+API_KEY"));
+  assert.ok(server.includes('process.env.GEMINI_API_KEY'));
+  assert.ok(server.includes("'x-goog-api-key':API_KEY"));
 });
