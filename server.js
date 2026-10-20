@@ -62,10 +62,16 @@ async function interpret(req,res) {
   return send(res,200,{intent:String(result.intent||'acompanhamento').slice(0,80),intentLabel:String(result.intentLabel||'Acompanhamento do pet').slice(0,120),summary:String(result.summary||'').slice(0,500),suggestedEvent,needsVet:Boolean(result.needsVet),response:String(result.response||'Confirme as informações com a clínica.').slice(0,700),model:MODEL,provider:'API de IA generativa'});
 }
 function serveStatic(req,res) {
-  const urlPath=decodeURIComponent(new URL(req.url,'http://localhost').pathname);
+  let urlPath;
+  try { urlPath=decodeURIComponent(new URL(req.url,'http://localhost').pathname); }
+  catch { res.writeHead(400); return res.end('URL inválida.'); }
   const requested=urlPath==='/'?'/index.html':urlPath;
-  const filePath=path.resolve(ROOT,'.'+requested);
-  if (!filePath.startsWith(ROOT+path.sep) && filePath!==ROOT) {res.writeHead(403);return res.end('Forbidden');}
+  const normalized=requested.replace(/\\/g,'/');
+  const isIndex=normalized==='/index.html';
+  const isAsset=normalized.startsWith('/assets/') && !normalized.split('/').some(part=>part.startsWith('.')||part==='..');
+  if (!isIndex && !isAsset) {res.writeHead(404,{'Content-Type':'text/plain; charset=utf-8'});return res.end('Arquivo não encontrado.');}
+  const filePath=path.resolve(ROOT,'.'+normalized);
+  if (!filePath.startsWith(path.join(ROOT,'assets')+path.sep) && !isIndex) {res.writeHead(404);return res.end('Arquivo não encontrado.');}
   fs.readFile(filePath,(err,content)=>{
     if(err){res.writeHead(404,{'Content-Type':'text/plain; charset=utf-8'});return res.end('Arquivo não encontrado.');}
     res.writeHead(200,{'Content-Type':MIME[path.extname(filePath)]||'application/octet-stream','X-Content-Type-Options':'nosniff'});
