@@ -111,13 +111,14 @@ Esta entrega é uma **demonstração funcional/simulada** do componente de IA. O
 
 ## 8. Como executar
 
-1. Clone ou baixe este repositório.
-2. Abra a pasta no VS Code.
-3. Abra `index.html` em um navegador moderno ou utilize a extensão Live Server.
-4. Navegue pelos menus Dashboard, Pets, Demonstração da IA, Protocolos, Arquitetura, Dados & IA e Jornada.
-5. Para demonstrar o fluxo completo: selecione um pet → **Analisar com IA** → execute a análise → **Criar ações de cuidado na jornada** → avance as etapas da jornada.
+1. Instale Node.js 18 ou superior.
+2. Copie `.env.example` para `.env` e preencha `OPENAI_API_KEY` com sua chave (não compartilhe nem publique esse arquivo).
+3. Execute `npm start` na pasta raiz.
+4. Abra `http://localhost:3000`.
+5. Na seção Demonstração IA, escreva uma mensagem e clique em **Interpretar mensagem com IA generativa**.
+6. Para testar: execute `npm test`.
 
-Não são necessárias dependências ou instalação de servidor para a demonstração front-end.
+A integração de IA requer chave válida, conexão com a internet e um modelo habilitado. Abrir `index.html` diretamente não ativa o endpoint de IA.
 
 ## 9. Estrutura
 
@@ -133,7 +134,8 @@ CLYVO_VET_SPRINT3_FINAL_COMPLETO/
 │   ├── CHECKLIST_ENTREGA.md
 │   ├── DADOS_E_IA.md
 │   ├── DOCUMENTACAO_IA.md
-│   └── ROTEIRO_PITCH.md
+│   ├── ROTEIRO_PITCH.md
+│   └── SPRINT4_IMPLEMENTACAO_IA.md
 ├── .gitignore
 ├── LINKS.txt
 └── README.md
