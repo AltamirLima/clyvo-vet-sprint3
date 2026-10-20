@@ -1,0 +1,14 @@
+{
+  "name": "clyvo-vet-sprint4",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CLYVO VET Sprint 4 — integração real com API de IA generativa",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
