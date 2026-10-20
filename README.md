@@ -45,7 +45,7 @@ Uma recomendação ou retorno pode ser identificado durante o cuidado, mas não 
 
 - HTML5, CSS3 e JavaScript.
 - Node.js 18+ (backend sem dependências externas de pacote).
-- API de IA compatível com Chat Completions.
+- API Google Gemini (`generateContent`).
 - `localStorage` para persistência local das demonstrações.
 - Mermaid para o diagrama arquitetural.
 
@@ -110,3 +110,6 @@ CLYVO_VET_SPRINT4/
 - **Vídeo Sprint 4:** ainda precisa ser gravado com a IA real configurada, publicado no YouTube como **Não listado**, e inserido no `LINKS.txt` e neste README.
 
 Antes de entregar, configure a chave no ambiente de demonstração, execute os testes, teste cenários de sucesso e falha, grave o vídeo e valide a integridade do ZIP.
+
+
+Documentação oficial do endpoint Gemini: https://ai.google.dev/api/generate-content.
