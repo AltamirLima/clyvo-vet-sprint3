@@ -12,3 +12,111 @@
 .ai-interpretation-status.error{padding:10px;border-radius:8px;background:#fff0ef;color:#a12d27}
 .ai-generated-card{padding:14px;margin-bottom:16px;border:1px solid #bfe3d7;border-radius:12px;background:#f2fbf7}
 .ai-generated-card h4{margin:5px 0 10px}.ai-generated-card p{margin:7px 0;line-height:1.5}.ai-generated-card small{color:#42655c}
+
+
+/* Sprint 4 — interface futurista simplificada */
+:root {
+  --bg: #07131b;
+  --surface: #0d202a;
+  --surface-2: #102a35;
+  --ink: #e8fbff;
+  --muted: #9ab5c0;
+  --line: rgba(109, 225, 225, .17);
+  --accent: #63f5d2;
+  --accent-2: #5cc8ff;
+  --shadow: 0 18px 55px rgba(0,0,0,.25);
+}
+html { scroll-behavior: smooth; }
+body {
+  background:
+    radial-gradient(ellipse at 80% 0%, rgba(24,133,151,.18), transparent 34%),
+    radial-gradient(ellipse at 10% 45%, rgba(65,92,195,.12), transparent 30%),
+    var(--bg) !important;
+  color: var(--ink) !important;
+}
+.app { background: transparent !important; }
+.sidebar {
+  background: rgba(6, 22, 30, .94) !important;
+  border-right: 1px solid var(--line) !important;
+  box-shadow: 12px 0 40px rgba(0,0,0,.12);
+  backdrop-filter: blur(18px);
+}
+.brand-icon, .pet-core { box-shadow: 0 0 25px rgba(99,245,210,.14); }
+.brand-sub, .crumb, .eyebrow, .label { color: var(--accent) !important; letter-spacing: .14em; }
+.nav { color: #aac5cf !important; border: 1px solid transparent; transition: .2s ease; }
+.nav:hover, .nav.active {
+  background: linear-gradient(110deg, rgba(99,245,210,.16), rgba(92,200,255,.08)) !important;
+  border-color: rgba(99,245,210,.2);
+  color: #f2ffff !important;
+  box-shadow: inset 3px 0 var(--accent), 0 0 25px rgba(99,245,210,.04);
+}
+main { background: transparent !important; }
+.top { border-bottom: 1px solid var(--line); padding-bottom: 22px; }
+h1, h2, h3, h4, .panel-title h3, .step-title b { color: #f0fcff !important; }
+p, small, .field-help, .step-title small { color: var(--muted) !important; }
+.view, .panel, .welcome, .kpis article, .ia-insights article, .architecture-details article,
+.protocol-explain, .journey-main, .journey-events, .attribution, .table-wrap {
+  background: linear-gradient(145deg, rgba(15,38,49,.94), rgba(9,27,36,.92)) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: var(--shadow);
+  color: var(--ink) !important;
+  border-radius: 18px !important;
+}
+.welcome {
+  background:
+    radial-gradient(circle at 82% 30%, rgba(99,245,210,.13), transparent 30%),
+    linear-gradient(120deg, rgba(16,45,57,.98), rgba(8,25,35,.98)) !important;
+  position: relative; overflow: hidden;
+}
+.welcome:after {
+  content: ""; position:absolute; inset:0; pointer-events:none;
+  background: repeating-linear-gradient(0deg, transparent 0 34px, rgba(99,245,210,.025) 35px 36px);
+}
+button, .primary, .secondary, .outline, .ghost, .filter, .mini-btn {
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+button:hover { transform: translateY(-1px); }
+.primary, .secondary {
+  background: linear-gradient(100deg, #5de9c9, #6bd7ff) !important;
+  color: #06202a !important; border: 0 !important;
+  box-shadow: 0 7px 22px rgba(77,225,207,.13);
+  font-weight: 700;
+}
+.outline, .ghost, .filter, .mini-btn, .quick-scenarios button {
+  background: rgba(10,31,41,.8) !important; color: #ccecf2 !important;
+  border: 1px solid var(--line) !important;
+}
+input, select, textarea {
+  background: #081b25 !important; color: #e8fbff !important;
+  border: 1px solid rgba(113,208,221,.24) !important;
+  border-radius: 10px !important;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none !important; border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(99,245,210,.1) !important;
+}
+input::placeholder, textarea::placeholder { color: #698994 !important; }
+.step-title > span, .ia-insights article > span, .data-score, .kicon, .journey-icon {
+  background: rgba(99,245,210,.12) !important; color: var(--accent) !important;
+  border: 1px solid rgba(99,245,210,.16);
+}
+.protocol-card, .pet-card, .analysis-record, .attention-row, .source-bars > div {
+  background: rgba(7,25,34,.65) !important; border-color: var(--line) !important;
+}
+table th { background: #102b37 !important; color: var(--accent) !important; }
+table td { border-color: var(--line) !important; color: #d4eaf0 !important; }
+.ai-interpretation-status { border-radius: 12px; }
+.ai-interpretation-status:empty { display:none; }
+.side-status { border-top-color: var(--line) !important; }
+.pulse { box-shadow: 0 0 12px var(--accent); }
+.date-chip { background: rgba(99,245,210,.08) !important; border: 1px solid var(--line); color: var(--accent) !important; }
+
+/* Menos ruído visual: manter o fluxo principal e ocultar blocos repetitivos de explicação. */
+.ia-insights, .ia-method, .protocol-explain, .architecture-details, .data-dashboard, .attribution { display: none !important; }
+.section-head { margin-bottom: 18px !important; }
+.view { animation: fadeUp .32s ease both; }
+@keyframes fadeUp { from {opacity:0; transform:translateY(6px)} to {opacity:1; transform:translateY(0)} }
+@media (max-width: 760px) {
+  .sidebar { backdrop-filter: none; }
+  .welcome { padding: 24px !important; }
+}
