@@ -8,7 +8,7 @@ O componente inteligente transforma dados do pet e eventos registrados em **obri
 
 ## 2. Abordagem escolhida
 
-A abordagem do Sprint 3 é um **motor de regras inteligentes (sistema baseado em regras parametrizadas)**.
+A abordagem do Sprint 4 é um **motor de regras inteligentes (sistema baseado em regras parametrizadas)**.
 
 A escolha é adequada ao protótipo porque os critérios utilizados são explícitos e precisam ser auditáveis. Em vez de gerar uma opinião clínica livre, o motor compara atributos do pet e eventos com protocolos previamente definidos e produz uma recomendação explicável.
 
@@ -111,6 +111,6 @@ A recomendação é uma ação de acompanhamento e **não constitui diagnóstico
 
 O sistema não deve responder perguntas clínicas com diagnóstico, prescrição ou opinião médica. Quando uma questão exigir avaliação clínica, a decisão deve ser direcionada ao profissional veterinário.
 
-## 10. Escopo do Sprint 3
+## 10. Escopo do Sprint 4
 
-Este Sprint 3 especifica e demonstra o componente inteligente. O protótipo apresentado é uma simulação funcional do fluxo de decisão e da jornada; uma implementação de backend, APIs reais e banco persistente pode ser evoluída em etapas posteriores.
+Este Sprint 4 especifica e demonstra o componente inteligente. O protótipo apresentado é uma simulação funcional do fluxo de decisão e da jornada; uma implementação de backend, APIs reais e banco persistente pode ser evoluída em etapas posteriores.
